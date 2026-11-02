@@ -1,41 +1,361 @@
-# Nexora Analytics — Enterprise Analytics Dashboard
+# Nexora Analytics
 
-React + TypeScript + Vite · Redux Toolkit · TanStack Query · TanStack Table · Apache ECharts · Tailwind CSS v4 · React Router
+### Enterprise Analytics Dashboard
 
-## Run
-Requires Node 20.19+ (or 22.12+).
+A modern, responsive enterprise analytics platform built to transform business data into actionable insights through interactive dashboards, advanced visualizations, customer analytics, and reporting.
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| React.js | UI development |
+| TypeScript | Type safety |
+| Vite | Build tooling |
+| Redux Toolkit | Global state management |
+| TanStack Query | Server-state management and caching |
+| TanStack Table | Advanced data tables |
+| Apache ECharts | Interactive data visualization |
+| Tailwind CSS v4 | Styling |
+| React Router | Application routing |
+| Lucide React | Icons |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20.19+ or 22.12+
+- npm
+- 
+
+### Available Commands
 
 ```bash
-npm install
-npm run dev        # http://localhost:5173
+npm run dev        # Start development server
+npm run typecheck  # Run TypeScript checks
+npm run lint       # Run ESLint
+npm test           # Run test suite
+npm run build      # Create production build
+```
+
+---
+
+## Application Features
+
+### 1. Analytics Overview
+
+A centralized dashboard providing a comprehensive overview of business performance.
+
+**KPI Metrics:**
+- Total Revenue
+- Total Users
+- Active Users
+- Conversion Rate
+- Average Order Value
+- Customer Retention
+
+Each KPI includes performance comparisons, percentage changes, trend indicators, and sparklines.
+
+### 2. Revenue Analytics
+
+Detailed revenue performance and financial insights.
+
+- Revenue trends and breakdowns.
+- Daily revenue analysis.
+- Product and category performance.
+- Order value distribution.
+- Refund analysis.
+- Interactive charts and filtering.
+
+### 3. Customer Analytics
+
+Customer acquisition, engagement, and retention insights.
+
+- Customer directory.
+- Customer search and sorting.
+- Customer segmentation.
+- Retention metrics.
+- Customer-level analytics.
+- CSV export.
+
+### 4. Product Performance
+
+Analyze product-level business performance.
+
+- Product-wise revenue.
+- Product demand analysis.
+- Category distribution.
+- Value breakdowns.
+- Refund analysis.
+
+### 5. Orders Management
+
+An advanced operational data table with:
+
+- Sorting and global search.
+- Status-based filtering.
+- Pagination.
+- Column visibility controls.
+- Row selection.
+- Operational KPI cards.
+- Status distribution charts.
+- Volume analytics.
+- CSV export.
+
+### 6. Reports
+
+Generate and manage analytics reports.
+
+Supported report types:
+
+1. Orders
+2. Analytics
+3. Customers
+4. Products
+5. Regions
+6. Daily Revenue
+7. Order Status
+
+Generated reports persist locally and support downloadable exports.
+
+### 7. Settings
+
+Manage personal workspace preferences, theme, density, and application settings.
+
+---
+
+## Global Filtering System
+
+Shared filters are available across analytics pages.
+
+**Date Filters:**
+- Today
+- Last 7 days
+- Last 30 days
+- Last 90 days
+- Custom date ranges
+
+**Additional Filters:**
+- Multi-select regions.
+- Multi-select product categories.
+
+Selected filters update analytics, KPI calculations, charts, tables, and exports.
+
+---
+
+## Authentication & Role-Based Access
+
+Nexora includes a demonstration authentication flow with protected routes and three workspace roles.
+
+| Role | Access |
+|---|---|
+| Admin | Full workspace access |
+| Manager | Analytics, customer analytics, reports, and permitted pages |
+| Analyst | Core analytics, orders, and personal settings |
+
+### Demo Login
+
+- Email: Any valid email address.
+- Password: Minimum 6 characters.
+- Role: Select Admin, Manager, or Analyst.
+
+Authentication and browser-based role guards are demonstration features. A production backend must independently enforce authentication and authorization for private data.
+
+---
+
+## Data & API Architecture
+
+The application uses a structured mock service layer designed for future backend integration.
+
+### Mock Data
+
+The analytics service provides:
+
+- 36,000 deterministic records.
+- Two years of historical data.
+- 1,600 customer identities.
+- 20 products.
+- Aggregation and asynchronous data requests.
+
+Replace `src/services/analytics.ts` to integrate a real backend.
+
+### State Management
+
+**Redux Toolkit** manages:
+- Authentication and session.
+- Global filters.
+- Sidebar state.
+- Theme preferences.
+- Display density.
+
+**TanStack Query** manages:
+- Data fetching.
+- Server-state caching.
+- Query invalidation.
+- Asynchronous loading and error states.
+
+**TanStack Table** manages:
+- Sorting.
+- Searching.
+- Filtering.
+- Pagination.
+- Column visibility.
+- Row selection.
+
+---
+
+## Analytics Calculation Logic
+
+The application follows consistent business calculation rules:
+
+- **Revenue:** Includes completed and processing orders. Other statuses contribute no revenue.
+- **Users:** Calculated using distinct customer email addresses.
+- **Conversion Rate:** Represents the share of completed and processing orders.
+- **Customer Retention:** Represents the share of customers with repeat orders within the selected period.
+- **Traffic Sources:** Simulated order acquisition channels, not actual website tracking.
+
+---
+
+## Search & Discovery
+
+The global header search supports finding charts and KPI metrics across permitted pages.
+
+Features:
+- Search charts and metrics.
+- Navigate directly to matching results.
+- Focus the corresponding dashboard card.
+- Respect role-based page permissions.
+
+---
+
+## Data Export & Reporting
+
+Nexora supports multiple export formats.
+
+| Format | Capabilities |
+|---|---|
+| CSV | Full filtered datasets |
+| PDF | Current analytics page snapshot |
+| PowerPoint | Editable titles, KPI text and tables |
+
+### Export Capabilities
+
+- Export data in CSV, PDF, and PowerPoint.
+- Export selected table rows when selections exist.
+- Export all matching records across pages when no rows are selected.
+- Capture current filters and KPI values.
+- Include charts and the selected visualization.
+- Switch chart visualizations to Data mode to include their data tables.
+- Download reports locally.
+
+PDF and PowerPoint exports capture the current page's KPI values, charts, selected filter context, and currently displayed table rows.
+
+Chart visualizations are embedded as images in document exports. PowerPoint titles, KPI text, and tables remain editable.
+
+Export libraries are loaded on demand. Exports are blocked while data is loading or showing an error.
+
+---
+
+## Testing & Validation
+
+The project includes tests for:
+
+- Analytics calculations.
+- Combined filtering.
+- Role-based permissions.
+- CSV export safety.
+- Credential validation.
+- Table searching.
+- Row selection.
+- Column visibility.
+- Pagination.
+- Empty results.
+
+### Verification Commands
+
+```bash
 npm run typecheck
 npm run lint
 npm test
 npm run build
 ```
 
-## Build status
-- [x] Phase 1 — project setup, architecture, design tokens, utilities, tests
+All four verification commands pass.
 
-## Completed application
+**Browser testing:** No browser automation is installed. Visual and full browser interaction QA remain manual.
 
-- Seven routed pages: overview, revenue, customers, products, orders, reports, settings.
-- Sign in at `/login` using any valid email and a password of at least six characters. Select Admin, Manager or Analyst to test page permissions. Any valid email and password with six characters works.
-- Admin and Manager can access customer analytics and reports; Analyst can access core analytics, orders and personal settings.
-- Shared date presets/custom ranges, multi-select regions and categories feed all analytics and exports.
-- The mock service owns 36,000 deterministic records spanning two years, 1,600 customer identities and 20 products, aggregation and asynchronous requests. Replace `src/services/analytics.ts` to connect a backend.
-- Redux owns session, filters, sidebar, theme and density. TanStack Query caches server data. TanStack Table handles sorting, searching, status filters, pagination, visibility and selection.
-- Reports persist locally and download CSV snapshots. Table exports use selected rows when present, otherwise all matching rows across pages.
-- Revenue counts completed/processing orders; other statuses contribute no revenue. Users are distinct customer emails. Conversion is the share of completed/processing orders. Retention is the share of customers with repeat orders within the selected period. Traffic channels are simulated order acquisition sources, not web tracking.
-- Mock authentication and browser role guards are demonstration features; a real backend must enforce access for private data.
+---
 
-## Verification
+## Project Structure
 
-`npm run typecheck`, `npm run lint`, `npm test`, and `npm run build` pass. Tests cover calculations, combined filters, permissions, CSV safety, credential validation, table searching, selection, visibility, pagination and empty results. No browser automation is installed; visual and full browser interaction QA remain manual.
+```text
+src/
+├── components/
+│   ├── brand/
+│   ├── charts/
+│   ├── common/
+│   ├── search/
+│   └── tables/
+├── pages/
+│   ├── AnalyticsPage.tsx
+│   ├── CustomersPage.tsx
+│   └── Login.tsx
+├── services/
+│   ├── analytics.ts
+│   ├── customers.ts
+│   └── reports.ts
+├── store/
+│   └── index.ts
+├── styles/
+│   └── index.css
+├── test/
+│   └── setup.ts
+├── types/
+├── utils/
+├── App.tsx
+└── main.tsx
+```
 
+---
 
-## Expanded analytics and document exports
+## Build Status
 
-The header search finds charts and KPI metrics across permitted pages, navigates to the result and focuses its card. The customer directory supports searching, sorting, pagination and CSV export. Orders has operational KPIs, status distribution and volume charts; Revenue and Products include additional product, value, demand and refund breakdowns. Reports can generate seven types: orders, analytics, customers, products, regions, daily revenue and status.
+- [x] Phase 1 — Project setup and architecture.
+- [x] Design tokens and utilities.
+- [x] Analytics dashboard implementation.
+- [x] Seven routed application pages.
+- [x] State management and data fetching.
+- [x] Advanced tables and filtering.
+- [x] Authentication and role-based navigation.
+- [x] CSV, PDF, and PowerPoint exports.
+- [x] Automated test suite.
+- [x] TypeScript, lint, and production build verification.
+- [ ] Browser-based visual and interaction QA.
 
-Use **Export data** to select CSV, PDF or PowerPoint. PDF/PPTX exports capture the current page's KPI values, charts (including the selected visualization), selected filter context and the currently displayed table rows. Switch a chart to Data to include that data table. CSV exports include the full filtered order dataset. Charts in document exports are images; PowerPoint titles, KPI text and tables are editable. Libraries load on demand. Export is blocked while data is loading or showing an error.
+---
+
+## Future Backend Integration
+
+The initial implementation uses deterministic mock data.
+
+Future integration can replace the mock service layer with real APIs while retaining the existing application architecture.
+
+Production deployment should include:
+- Secure authentication.
+- Server-side role-based authorization.
+- Persistent data storage.
+- Backend analytics aggregation.
+- Production-grade API error handling.
+
+---
+
+## License
+
+This project is developed as an enterprise analytics dashboard portfolio project.
+
+---
+
+**Nexora Analytics — Turn data into direction.**
