@@ -1,0 +1,20 @@
+import { useState } from 'react';
+import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnDef, type SortingState } from '@tanstack/react-table';
+import { Search, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { summarizeCustomers } from '@/services/customers';
+import { formatCurrency } from '@/utils/format';
+import { downloadCsv, toCsv } from '@/utils/csv';
+type Customer = ReturnType<typeof summarizeCustomers>[number];
+const columns: ColumnDef<Customer>[] = [
+  { accessorKey: 'name', header: 'Customer', cell: ({ row }) => <div className="person"><span><strong>{row.original.name}</strong><small>{row.original.email}</small></span></div> },
+  { accessorKey: 'email', header: 'Email' }, { accessorKey: 'region', header: 'Region' }, { accessorKey: 'orders', header: 'Orders' },
+  { accessorKey: 'revenue', header: 'Revenue', cell: ({ getValue }) => formatCurrency(getValue<number>()) }, { accessorKey: 'firstOrder', header: 'First order' }, { accessorKey: 'lastOrder', header: 'Latest order' },
+];
+export function CustomersTable({ customers }: { customers: Customer[] }) {
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'revenue', desc: true }]);
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const table = useReactTable({ data: customers, columns, state: { globalFilter: search, sorting, columnVisibility: { email: false } }, onGlobalFilterChange: setSearch, onSortingChange: setSorting, getCoreRowModel: getCoreRowModel(), getFilteredRowModel: getFilteredRowModel(), getSortedRowModel: getSortedRowModel(), getPaginationRowModel: getPaginationRowModel(), initialState: { pagination: { pageSize: 25 } } });
+  function exportCustomers() { downloadCsv('nexora-customers', toCsv(['Customer', 'Email', 'Region', 'Orders', 'Revenue', 'First order', 'Latest order'], table.getFilteredRowModel().rows.map(({ original: c }) => [c.name, c.email, c.region, c.orders, c.revenue, c.firstOrder, c.lastOrder]))); }
+  return <section className="panel table-panel"><div className="panel-heading"><div><h2>Customer directory</h2><p>{customers.length.toLocaleString()} customers in this period. Search names, email addresses or regions.</p></div><button onClick={exportCustomers}><Download size={14} />CSV</button></div><div className="table-tools"><label className="search"><Search size={15} /><input aria-label="Search customers" placeholder="Search customers…" value={search} onChange={e => { setSearch(e.target.value); table.setPageIndex(0); }} /></label></div><div className="table-scroll"><table><thead>{table.getHeaderGroups().map(g => <tr key={g.id}>{g.headers.map(h => <th key={h.id}><button className="sort" onClick={h.column.getToggleSortingHandler()}>{flexRender(h.column.columnDef.header, h.getContext())} {h.column.getIsSorted() === 'desc' ? '↓' : h.column.getIsSorted() === 'asc' ? '↑' : '↕'}</button></th>)}</tr>)}</thead><tbody>{table.getRowModel().rows.map(row => <tr key={row.id}>{row.getVisibleCells().map(cell => <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>)}</tr>)}</tbody></table>{!table.getRowModel().rows.length && <div className="empty">No matching customers.</div>}</div><div className="table-footer"><span>{table.getFilteredRowModel().rows.length} customers</span><div><select aria-label="Customers per page" value={table.getState().pagination.pageSize} onChange={e => table.setPageSize(Number(e.target.value))}>{[10, 25, 50, 100].map(n => <option key={n} value={n}>{n} / page</option>)}</select><button aria-label="Previous customer page" disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}><ChevronLeft size={15} /></button><span>{table.getState().pagination.pageIndex + 1} / {Math.max(1, table.getPageCount())}</span><button aria-label="Next customer page" disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}><ChevronRight size={15} /></button></div></div></section>;
+}
